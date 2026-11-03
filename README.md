@@ -1,188 +1,170 @@
-# DataLab — Proyecto Integrador
-**Espacio académico:** Lógica Computacional  
-**Programa:** Ingeniería de Datos e Inteligencia Artificial  
-**Institución:** Universidad Santo Tomás
+# DataLab — Proyecto integrador (semanas 1–14)
 
-## 1. Descripción
+Proyecto académico modular en Python para procesar y analizar datos sintéticos de sensores. El equipo desarrolla una única aplicación progresiva; cada entrega conserva las funcionalidades anteriores.
 
-DataLab es un proyecto integrador que se construirá progresivamente durante las semanas 10 a 14 del espacio académico. Su propósito es aplicar los conceptos de programación estudiados y evolucionar una misma solución para procesar registros.
+## Organización del equipo
 
-El proyecto **no comienza desde cero en la semana 10**. Se parte de una base de código que recoge los conocimientos y funcionalidades trabajados durante las semanas 1 a 9. Cada entrega incorpora nuevos conceptos y conserva lo desarrollado anteriormente.
+Equipos de tres estudiantes con roles técnicos permanentes durante las semanas 10–14:
 
-## 2. Repositorio base
+| Rol | Responsabilidad | Archivos principales |
+|---|---|---|
+| A — Calidad de datos | Normalización, estandarización, validación y motivos de rechazo. | `src/validation/normalizacion.py`, `validaciones.py` |
+| B — Robustez | Excepciones, reporte de errores, continuidad del lote e integración del procesamiento. | `src/exceptions/errores.py`, `src/processing/procesamiento.py` |
+| C — Fuentes | Adaptadores en memoria, lectura CSV/JSON/Excel y carga uniforme. | `src/data/fuentes_memoria.py`, `lectores.py`, `carga_datos.py` |
 
-El repositorio oficial que el docente utilizará como línea base del proyecto es:
+Las tres contribuciones son complementarias: A + B + C deben completar el 100 % de la funcionalidad solicitada en cada semana. La carga se equilibra en implementación, pruebas y documentación, no por cantidad de líneas de código.
 
-<https://github.com/jarb-santoto/proyecto_red_iot>
+## Interfaz gráfica
 
-El repositorio se encuentra inicialmente vacío. El docente y los estudiantes construirán progresivamente su estructura y código fuente.
+`src/interface/streamlit_app.py` y `src/services/datalab_service.py` son provistos por el docente. Streamlit incluye desde el día uno una demostración en memoria, tablas, indicadores, gráficos, descarga de resultados y selector gráfico de archivos. La lectura real de CSV/JSON/Excel se activa al integrar los lectores de la semana 12.
 
-### Crear el repositorio del equipo
+Los estudiantes no deben modificar `src/interface/` ni `src/services/`. La interfaz no contiene reglas de negocio.
 
-1. Ingresar al repositorio base compartido por el docente.
-2. Seleccionar **Use this template** y luego **Create a new repository**.
-3. Crear un repositorio independiente para el equipo, con el nombre indicado por el docente.
-4. Un integrante crea el repositorio y agrega a sus compañeros desde **Settings → Collaborators**.
-5. Cada integrante clona el repositorio del equipo (no el repositorio base del docente).
+## Estructura del proyecto
 
-**No se debe trabajar directamente sobre el repositorio del docente.** Cada equipo tendrá su propio repositorio.
+```text
+DataLab/
+├── src/
+│   ├── main.py
+│   ├── data/
+│   │   ├── sensores.py
+│   │   ├── fuentes_memoria.py       # Rol C
+│   │   ├── lectores.py              # Rol C · semana 12
+│   │   └── carga_datos.py           # Rol C · semana 12
+│   ├── validation/
+│   │   ├── normalizacion.py         # Rol A
+│   │   └── validaciones.py          # Rol A
+│   ├── exceptions/
+│   │   └── errores.py               # Rol B
+│   ├── processing/
+│   │   ├── clasificacion.py         # Regla centralizada
+│   │   ├── procesamiento.py        # Rol B
+│   │   └── resumen.py
+│   ├── services/
+│   │   └── datalab_service.py       # Docente
+│   └── interface/
+│       ├── consola.py
+│       └── streamlit_app.py         # Docente · 100 %
+├── data/
+│   ├── raw/                         # CSV, JSON y Excel
+│   ├── processed/
+│   └── output/
+├── tests/
+├── docs/
+└── requirements.txt
+```
 
-## 3. Organización del equipo
+## Ejecución
 
-- Los equipos tendrán máximo **tres estudiantes**.
-- Todos los integrantes deben participar en programación, integración y pruebas.
-- Los roles de desarrollo, pruebas, integración y revisión deben rotar entre las entregas.
-- Ningún integrante tendrá como única responsabilidad la documentación o la administración del repositorio.
-- Cada estudiante debe poder explicar individualmente el código integrado.
-
-## 4. Entregas del proyecto
-
-| Semana | Entrega | Versión | Alcance principal |
-|---|---|---|---|
-| 10 | Proyecto Integrador 1 | DataLab 1.0 | Cadenas, normalización y validación de registros |
-| 11 | Proyecto Integrador 2 | DataLab 1.1 | Manejo de errores y excepciones |
-| 12 | Proyecto Integrador 3 | DataLab 1.2 | Lectura de archivos CSV y carga de datos |
-| 13 | Proyecto Integrador 4 | DataLab 1.3 | Módulos y refactorización |
-| 14 | Proyecto Integrador 5 | DataLab 1.4 | Pruebas integrales, documentación y sustentación |
-
-Cada entrega amplía la versión anterior. No se deben crear cinco proyectos independientes ni eliminar funcionalidades que ya estén implementadas.
-
-## 5. Herramientas de desarrollo
-
-Se puede trabajar con cualquiera de estos entornos:
-
-- **Visual Studio Code (VS Code):** <https://code.visualstudio.com/>
-- **PyCharm:** <https://www.jetbrains.com/pycharm/>
-
-También se requiere:
-
-- Python, en la versión que indique el docente.
-- Git, para el control de versiones.
-- Una cuenta de GitHub y acceso al repositorio del equipo.
-
-El editor es una elección del estudiante. La estructura del proyecto y los comandos deben funcionar independientemente de que se utilice VS Code o PyCharm.
-
-## 6. Preparación del entorno
-
-### 6.1. Verificar Python y Git
-
-En una terminal, ejecutar:
+Requiere Python 3.10 o superior.
 
 ```bash
-python --version
-git --version
-```
-
-En algunos sistemas Windows, el comando de Python puede ser:
-
-```powershell
-py --version
-```
-
-Si alguno de los comandos no se reconoce, se debe instalar la herramienta correspondiente y verificar que esté disponible en el PATH del sistema.
-
-### 6.2. Clonar el repositorio del equipo
-
-Una vez creado el repositorio del equipo en GitHub:
-
-```bash
-git clone URL_DEL_REPOSITORIO_DEL_EQUIPO
-cd NOMBRE_DEL_REPOSITORIO
-```
-
-Reemplazar los valores de ejemplo por la URL y el nombre reales del repositorio del equipo.
-
-### 6.3. Crear un entorno virtual
-
-Se recomienda utilizar un entorno virtual para aislar las dependencias del proyecto.
-
-**Windows (PowerShell):**
-
-```powershell
-py -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-**Windows (CMD):**
-
-```bat
-py -m venv .venv
-.venv\Scripts\activate.bat
-```
-
-**Linux o macOS:**
-
-```bash
-python3 -m venv .venv
+python -m venv .venv
+# Windows:
+.venv\\Scripts\\activate
+# macOS/Linux:
 source .venv/bin/activate
+
+pip install -r requirements.txt
+streamlit run src/interface/streamlit_app.py
 ```
 
-Cuando el entorno esté activo, el nombre `(.venv)` suele aparecer al inicio de la línea de comandos.
-
-Para salir del entorno virtual:
+La línea base por consola puede ejecutarse con:
 
 ```bash
-deactivate
+python -m src.main
 ```
 
-> Si el docente entrega un archivo de dependencias (`requirements.txt`), instalar las dependencias dentro del entorno virtual con `pip install -r requirements.txt`. No instalar paquetes adicionales sin verificar que sean necesarios para la entrega.
+## Datasets
 
-## 7. Flujo de trabajo con Git y GitHub
+Se incluyen tres datasets sintéticos, cada uno con 500 registros:
 
-La rama `main` debe mantenerse estable. Cada tarea se desarrolla en una rama independiente.
+- `data/raw/temperatura.csv`
+- `data/raw/presion.json`
+- `data/raw/humedad.xlsx`
+
+Cada archivo contiene 24 incidencias intencionales (4,8 %): 8 valores faltantes, 8 extremos respecto del rango de generación y 8 valores no numéricos. No son mediciones reales ni estándares regulatorios.
+
+## Evolución y entregas
+
+| Semana | Versión | Rol A — Calidad | Rol B — Robustez | Rol C — Fuentes |
+|---|---|---|---|---|
+| 10 | v1.0 | Normalizar y validar campos. | Integrar estados válido/inválido. | Adaptador y escenarios de prueba en memoria. |
+| 11 | v1.1 | Mejorar motivos de validación. | Excepciones, reporte y continuidad. | Escenarios de fuentes defectuosas. |
+| 12 | v1.2 | Calidad de registros cargados. | Errores de lectura y conversión. | Lectores CSV, JSON y Excel. |
+| 13 | v1.3 | Refactorizar reglas de calidad. | Refactorizar procesamiento y errores. | Refactorizar lectores y carga. |
+| 14 | v1.4 | Pruebas de calidad. | Pruebas de errores e integración. | Pruebas de lectores y fuentes. |
+
+La aceptación de cada entrega exige integrar las tres ramas, ejecutar pruebas conjuntas y conservar la funcionalidad anterior.
+
+## Git: ramas semanales
+
+Los roles son permanentes; las ramas se crean por semana.
 
 Ejemplo:
 
-```bash
-git switch main
-git pull
-git switch -c feature/normalizar-registros
+```text
+main
+└── semana-10
+    ├── s10-calidad-datos
+    ├── s10-robustez
+    └── s10-fuentes
 ```
 
-Después de implementar y probar los cambios:
+Flujo obligatorio:
 
-```bash
-git status
-git add .
-git commit -m "Agrega normalizacion de registros"
-git push -u origin feature/normalizar-registros
+1. Crear `semana-XX` desde `main`.
+2. Crear las tres ramas individuales desde `semana-XX`.
+3. Desarrollar en los archivos asignados al rol.
+4. Registrar commits pequeños y descriptivos.
+5. Ejecutar pruebas y abrir Pull Request hacia `semana-XX`.
+6. Revisar e integrar los tres Pull Requests.
+7. Ejecutar pruebas de integración.
+8. Abrir Pull Request de `semana-XX` hacia `main`.
+9. Verificar que `main` quede estable y ejecutable.
+
+Convención de commits:
+
+- `feat(rol): descripción` — nueva funcionalidad.
+- `fix(rol): descripción` — corrección.
+- `test(rol): descripción` — pruebas.
+- `docs(rol): descripción` — documentación.
+
+Cada estudiante debe evidenciar commits de implementación y pruebas, y correcciones/documentación cuando correspondan. No se califica la cantidad de commits de forma aislada: se revisa su contenido y trazabilidad.
+
+## Contratos entre módulos
+
+Los registros utilizan las claves `id`, `tipo`, `valor` y `unidad`.
+
+El procesamiento integrado devuelve:
+
+```python
+{
+    "registros_validos": [],
+    "registros_invalidos": [],
+    "errores": [],
+    "resumen": {}
+}
 ```
 
-A continuación, abrir un **Pull Request (PR)** en GitHub hacia `main`. Otro integrante debe revisar los cambios, solicitar ajustes cuando sea necesario y aprobar la integración.
+- Los lectores entregan registros y no clasifican.
+- El rol A normaliza y valida; la normalización devuelve una copia.
+- El rol B coordina el procesamiento y evita que un error individual detenga el lote.
+- La clasificación se mantiene centralizada en `clasificar_valor(valor, tipo)`.
+- La interfaz consume el servicio de aplicación y no implementa reglas de negocio.
 
-Convenciones sugeridas para ramas:
+## Evaluación
 
-- `feature/`: nueva funcionalidad.
-- `fix/`: corrección de errores.
-- `refactor/`: reorganización del código sin cambiar su comportamiento esperado.
-- `test/`: creación o ajuste de pruebas.
-- `docs/`: documentación.
+- **40 % — Código entregado y funcionando:** funcionalidad integrada, pruebas, calidad, trazabilidad Git y ejecución.
+- **60 % — Sustentación:** comprensión individual y grupal, explicación del rol, decisiones técnicas, pruebas, integración y demostración del flujo completo.
 
-Conviene realizar commits pequeños, relacionados con un cambio concreto y con mensajes descriptivos.
+Un producto funcional no sustituye la sustentación. Cada integrante debe poder explicar su contribución y comprender el funcionamiento global de DataLab.
 
-## 8. Criterios generales de desarrollo
+## Reglas de trabajo
 
-1. Respetar los conceptos estudiados hasta la semana correspondiente.
-2. Reutilizar las funciones existentes; no duplicar lógica.
-3. Mantener las funcionalidades de las entregas anteriores.
-4. Probar los escenarios correctos e incorrectos definidos para cada entrega.
-5. Separar progresivamente la lectura de datos, el procesamiento y la presentación.
-6. Revisar los cambios de otro integrante antes de integrarlos.
-7. Asegurar que todos los integrantes comprendan el código.
-
-La función `clasificar_valor(valor)` que forme parte de la base entregada deberá reutilizarse cuando corresponda, evitando implementar nuevamente la misma lógica de clasificación.
-
-## 9. Interfaz de visualización
-
-La interfaz de visualización y prueba se apoyará en **Streamlit**, preparada principalmente por el docente. El trabajo central de los estudiantes estará en implementar y conectar la lógica de procesamiento, además de verificar su funcionamiento.
-
-No se espera que los equipos dediquen el esfuerzo principal a diseñar o desarrollar la interfaz gráfica.
-
-## 10. Estado del README
-
-Este README presenta las instrucciones generales de inicio y colaboración. Los comandos específicos para ejecutar la aplicación, la estructura definitiva de carpetas y las dependencias se completarán cuando se incorpore la base de código del proyecto.
-
----
-
-**DataLab — Proyecto Integrador de Lógica Computacional**  
-Universidad Santo Tomás · Ingeniería de Datos e Inteligencia Artificial
+- No trabajar directamente sobre `main`.
+- No modificar unilateralmente los contratos de `docs/contratos_modulos.md`.
+- No modificar `src/interface/` ni `src/services/`.
+- No duplicar las reglas de clasificación.
+- Resolver conflictos mediante revisión y coordinación, sin sobrescribir el trabajo de otro integrante.
+- Mantener actualizado el README y las evidencias de cada entrega.
