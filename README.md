@@ -66,7 +66,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
-streamlit run src/interface/streamlit_app.py
+python -m streamlit run src/interface/streamlit_app.py
 ```
 
 La línea base por consola puede ejecutarse con:
