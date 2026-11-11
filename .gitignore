@@ -1,12 +1,49 @@
+# --- Python ---
 __pycache__/
 *.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Entornos virtuales y variables de entorno ---
 .venv/
 venv/
+env/
 .env
+.env.*
+
+# --- Pruebas y herramientas de análisis ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- Jupyter ---
 .ipynb_checkpoints/
+
+# --- Streamlit (credenciales locales) ---
+.streamlit/secrets.toml
+
+# --- Editores e IDE ---
+.vscode/
+.idea/
+.qodo/
+*.swp
+
+# --- Sistema operativo ---
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# --- Archivos temporales de Office (Excel abierto) ---
+~$*
+
+# --- Registros ---
 *.log
+
+# --- Datos generados (se conservan las carpetas) ---
 data/processed/*
 data/output/*
 !data/processed/.gitkeep

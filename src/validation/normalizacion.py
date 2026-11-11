@@ -1,12 +1,21 @@
-"""Rol A: normalización y estandarización de registros.
+"""Normalización y estandarización de registros."""
+from copy import deepcopy
 
-SEMANA 10: implementar las funciones marcadas TODO.
-Contrato: recibir un diccionario y devolver una COPIA normalizada.
-No modificar el registro original.
-"""
+CAMPOS_TEXTO = ("id", "tipo", "valor", "unidad")
+
+
 def normalizar_registro(registro):
-    # TODO A-S10-01: validar que registro sea un diccionario.
-    # TODO A-S10-02: quitar espacios de id, tipo, unidad y valor textual.
-    # TODO A-S10-03: estandarizar tipo a minúsculas.
-    # TODO A-S10-04: devolver una copia; no convertir aún el valor a float aquí.
-    raise NotImplementedError("Pendiente: implementación del rol A, semana 10")
+    """Devuelve una copia normalizada; nunca modifica el objeto recibido.
+
+    - Quita espacios al inicio y al final de los campos de texto.
+    - Escribe el tipo de sensor en minúsculas.
+    """
+    if not isinstance(registro, dict):
+        raise TypeError("El registro debe ser un diccionario.")
+    copia = deepcopy(registro)
+    for campo in CAMPOS_TEXTO:
+        if isinstance(copia.get(campo), str):
+            copia[campo] = copia[campo].strip()
+    if isinstance(copia.get("tipo"), str):
+        copia["tipo"] = copia["tipo"].lower()
+    return copia

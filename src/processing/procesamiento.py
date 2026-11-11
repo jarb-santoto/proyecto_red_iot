@@ -1,15 +1,83 @@
-"""Orquestación del procesamiento.
-
-Semana 10–12: completar integración con validación y excepciones.
-La clasificación permanece centralizada en clasificacion.py.
-"""
+"""Orquestación robusta: un registro defectuoso no detiene el lote."""
 from src.processing.clasificacion import clasificar_valor
+from src.processing.resumen import generar_resumen
+from src.validation.normalizacion import normalizar_registro
+from src.validation.validaciones import validar_registro, convertir_a_numero
+from src.exceptions.errores import crear_reporte_error
+
+
+EVENTOS_TECNICOS = {
+    "SIMULACION_TIMEOUT_SENSOR": (
+        "TIMEOUT_SENSOR", "Tiempo de espera agotado al consultar el sensor."
+    ),
+    "SIMULACION_LECTURA_INTERMITENTE": (
+        "LECTURA_INTERMITENTE", "La lectura del sensor fue intermitente."
+    ),
+    "SIMULACION_PAQUETE_INCOMPLETO": (
+        "PAQUETE_INCOMPLETO", "El paquete recibido no contiene todos los datos esperados."
+    ),
+}
+
+
+def _registrar_incidencia_tecnica(registro, errores, indice, mensaje, categoria):
+    """Agrega a `errores` un reporte con el origen (y la fila, si se conoce)."""
+    if not isinstance(registro, dict):
+        registro = {}
+    origen = registro.get("_origen", "procesamiento")
+    if registro.get("_fila") is not None:
+        origen = f"{origen}:fila_{registro['_fila']}"
+    errores.append(crear_reporte_error(
+        origen, registro.get("id") or f"registro_{indice}", mensaje, categoria
+    ))
+
 
 def procesar_registros(registros):
-    # TODO B-S10-01: coordinar normalización y validación sin duplicar reglas.
-    # TODO B-S10-02: clasificar únicamente registros válidos.
-    # TODO B-S10-03: devolver el contrato común definido en docs/contratos_modulos.md.
-    # TODO B-S11-04: aislar errores por registro y continuar el lote.
-    # TODO B-S12-04: integrar entradas de lectores CSV, JSON y Excel.
-    # La función clasificar_valor(valor, tipo) debe reutilizarse.
-    raise NotImplementedError("Pendiente: integración del procesamiento, semanas 10–12")
+    """Devuelve válidos, inválidos y errores técnicos bajo el contrato DataLab."""
+    validos, invalidos, errores = [], [], []
+    if registros is None:
+        registros = []
+    try:
+        iterador = iter(registros)
+    except TypeError:
+        iterador = iter(())
+        errores.append(crear_reporte_error(
+            "entrada", None, "La fuente debe ser iterable.", "FORMATO_FUENTE"
+        ))
+
+    for indice, original in enumerate(iterador, start=1):
+        if isinstance(original, dict):
+            # Fila que el lector no pudo interpretar (p. ej. CSV irregular).
+            if original.get("_error_tecnico"):
+                _registrar_incidencia_tecnica(
+                    original, errores, indice,
+                    original["_error_tecnico"], "ESTRUCTURA_REGISTRO"
+                )
+                continue
+            # Evento técnico simulado: la lectura no es confiable y se excluye
+            # del análisis, pero el lote continúa.
+            evento = original.get("observacion_tecnica")
+            if evento in EVENTOS_TECNICOS:
+                categoria, mensaje = EVENTOS_TECNICOS[evento]
+                _registrar_incidencia_tecnica(original, errores, indice, mensaje, categoria)
+                continue
+
+        try:
+            normalizado = normalizar_registro(original)
+            es_valido, motivos = validar_registro(normalizado)
+            if not es_valido:
+                invalidos.append({"registro": normalizado, "motivos": motivos})
+                continue
+            normalizado["valor"] = convertir_a_numero(normalizado["valor"])
+            normalizado["clasificacion"] = clasificar_valor(
+                normalizado["valor"], normalizado["tipo"]
+            )
+            validos.append(normalizado)
+        except Exception as exc:
+            _registrar_incidencia_tecnica(original, errores, indice, str(exc), "PROCESAMIENTO")
+
+    return {
+        "registros_validos": validos,
+        "registros_invalidos": invalidos,
+        "errores": errores,
+        "resumen": generar_resumen(validos),
+    }

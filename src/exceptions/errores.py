@@ -1,9 +1,6 @@
-"""Rol B: excepciones y registro de incidencias.
+"""Excepciones y normalización de incidencias de DataLab."""
+from datetime import datetime, timezone
 
-Los tipos de excepción y el contrato de reporte están definidos.
-El estudiante implementa la estrategia de captura, clasificación y reporte
-durante las semanas 11 y 12.
-"""
 class DataLabError(Exception):
     """Excepción base de la aplicación."""
 
@@ -16,8 +13,13 @@ class ErrorFormatoFuente(DataLabError):
 class ErrorLecturaFuente(DataLabError):
     """No fue posible leer una fuente de datos."""
 
+
 def crear_reporte_error(origen, identificador, mensaje, categoria="PROCESAMIENTO"):
-    # TODO B-S11-01: construir un diccionario de error normalizado.
-    # TODO B-S11-02: incluir fecha/hora y categoría sin ocultar el mensaje original.
-    # TODO B-S11-03: evitar que el error de un registro interrumpa el lote completo.
-    raise NotImplementedError("Pendiente: implementación del rol B, semanas 11–12")
+    """Construye una incidencia estructurada sin perder el mensaje original."""
+    return {
+        "origen": str(origen),
+        "identificador": identificador,
+        "categoria": str(categoria).upper(),
+        "mensaje": str(mensaje),
+        "fecha_hora": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
